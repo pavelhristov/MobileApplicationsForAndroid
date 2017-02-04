@@ -57,10 +57,11 @@ public class SuperheroDetailsFragment extends Fragment {
     }
     protected void setSuperhero(View view, Superhero superhero) {
         this.superhero = superhero;
-        ((TextView) view
-                .findViewById(R.id.tv_name))
+        ((TextView) view.findViewById(R.id.tv_name))
                 .setText(this.superhero.name);
 
+        ((TextView) view.findViewById(R.id.tv_secret_identity))
+                .setText(this.superhero.secretIdentity);
     }
 
     public void setSuperhero(Superhero superhero) {

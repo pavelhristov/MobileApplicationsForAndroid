@@ -1,4 +1,4 @@
-package com.workshopbuildingui;
+package com.workshopbuildingui.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,7 +9,9 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 
 import com.astuetz.PagerSlidingTabStrip;
-import com.workshopbuildingui.activities.SuperheroDetailsActivity;
+import com.workshopbuildingui.ICanNavigateActivity;
+import com.workshopbuildingui.PageFragment;
+import com.workshopbuildingui.R;
 import com.workshopbuildingui.fragments.tabs.SearchFragment;
 import com.workshopbuildingui.fragments.tabs.SuperheroesFragment;
 import com.workshopbuildingui.models.Superhero;
