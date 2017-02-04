@@ -1,6 +1,8 @@
 package com.workshopbuildingui.models;
 
-public class Superhero {
+import java.io.Serializable;
+
+public class Superhero implements Serializable {
     public String name;
     public String secretIdentity;
     public String id;

@@ -9,7 +9,9 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.workshopbuildingui.ICanNavigateActivity;
 import com.workshopbuildingui.R;
 import com.workshopbuildingui.data.Data;
 import com.workshopbuildingui.models.Superhero;
@@ -62,13 +64,13 @@ public class SuperheroesFragment extends Fragment {
 
         lvSuperheroes.setAdapter(superheroesAdapter);
 
-        /*lvSuperheroes.setOnItemClickListener((parent, view, position, id) -> {
+        lvSuperheroes.setOnItemClickListener((parent, view, position, id) -> {
             Superhero sh = superheroes.get(position);
             //if activity is not ICanNavigateActivity) then do nothing
-            ICanNavigateActivity<Book> activity = (ICanNavigateActivity<Book>) this.getActivity();
+            ICanNavigateActivity<Superhero> activity = (ICanNavigateActivity<Superhero>) this.getActivity();
 
-            activity.navigate(book);
-        });*/
+            activity.navigate(sh);
+        });
 
         return root;
     }

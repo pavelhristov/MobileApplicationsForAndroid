@@ -1,5 +1,6 @@
 package com.workshopbuildingui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -8,10 +9,12 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 
 import com.astuetz.PagerSlidingTabStrip;
+import com.workshopbuildingui.activities.SuperheroDetailsActivity;
 import com.workshopbuildingui.fragments.tabs.SearchFragment;
 import com.workshopbuildingui.fragments.tabs.SuperheroesFragment;
+import com.workshopbuildingui.models.Superhero;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ICanNavigateActivity<Superhero> {
 
 
     @Override
@@ -27,6 +30,14 @@ public class MainActivity extends AppCompatActivity {
         PagerSlidingTabStrip tabsStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
         // Attach the view pager to the tab strip
         tabsStrip.setViewPager(viewPager);
+    }
+
+    @Override
+    public void navigate(Superhero superhero) {
+        Intent intent = new Intent(this, SuperheroDetailsActivity.class);
+
+        intent.putExtra(SuperheroDetailsActivity.SUPERHERO_KEY, superhero);
+        this.startActivity(intent);
     }
 
     public class SampleFragmentPagerAdapter extends FragmentStatePagerAdapter {

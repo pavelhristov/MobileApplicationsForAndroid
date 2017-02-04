@@ -12,10 +12,12 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.workshopbuildingui.ICanNavigateActivity;
 import com.workshopbuildingui.R;
 import com.workshopbuildingui.data.Data;
 import com.workshopbuildingui.models.Superhero;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SearchFragment extends Fragment {
@@ -42,14 +44,15 @@ public class SearchFragment extends Fragment {
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_search, container, false);
         ListView lvSuperheroes = (ListView) root.findViewById(R.id.fragment_superheroes_list);
+        final List<Superhero> superheroes = new ArrayList<>();
         data = new Data();
 
         Button btnSearch = (Button)root.findViewById(R.id.btn_search);
         btnSearch.setOnClickListener((btn) -> {
             String pattern = ((TextView)root.findViewById(R.id.et_search_pattern)).getText().toString();
-            List<Superhero> superheroes = data.search(pattern);
+            List<Superhero> foundSuperheroes = data.search(pattern);
             ArrayAdapter<Superhero> superheroesAdapter =
-                    new ArrayAdapter<Superhero>(root.getContext(), -1, superheroes) {
+                    new ArrayAdapter<Superhero>(root.getContext(), -1, foundSuperheroes) {
                         @NonNull
                         @Override
                         public View getView(int position, View convertView, ViewGroup parent) {
@@ -67,7 +70,17 @@ public class SearchFragment extends Fragment {
                             return view;
                         }
                     };
+            superheroes.clear();
+            superheroes.addAll(foundSuperheroes);
             lvSuperheroes.setAdapter(superheroesAdapter);
+        });
+
+        lvSuperheroes.setOnItemClickListener((parent, view, position, id) -> {
+            Superhero sh = superheroes.get(position);
+            //if activity is not ICanNavigateActivity) then do nothing
+            ICanNavigateActivity<Superhero> activity = (ICanNavigateActivity<Superhero>) this.getActivity();
+
+            activity.navigate(sh);
         });
 
 
