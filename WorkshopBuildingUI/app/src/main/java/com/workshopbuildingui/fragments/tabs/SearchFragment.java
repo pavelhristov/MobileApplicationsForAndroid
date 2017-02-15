@@ -12,6 +12,8 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.data.HttpData;
+import com.data.base.BaseData;
 import com.workshopbuildingui.ICanNavigateActivity;
 import com.workshopbuildingui.R;
 import com.workshopbuildingui.data.Data;
@@ -23,6 +25,7 @@ import java.util.List;
 public class SearchFragment extends Fragment {
 
     public static final String ARG_PAGE = "ARG_PAGE";
+    private BaseData<Superhero> superheroData;
     private Data data;
 
     public SearchFragment() {
@@ -45,6 +48,7 @@ public class SearchFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_search, container, false);
         ListView lvSuperheroes = (ListView) root.findViewById(R.id.fragment_superheroes_list);
         final List<Superhero> superheroes = new ArrayList<>();
+        //superheroData = new HttpData<Superhero>("",Superhero.class,Superhero[].class);
         data = new Data();
 
         Button btnSearch = (Button)root.findViewById(R.id.btn_search);

@@ -11,11 +11,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.data.HttpData;
+import com.data.base.BaseData;
 import com.workshopbuildingui.ICanNavigateActivity;
 import com.workshopbuildingui.R;
 import com.workshopbuildingui.data.Data;
 import com.workshopbuildingui.models.Superhero;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -40,38 +43,45 @@ public class SuperheroesFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_superheroes, container, false);
         ListView lvSuperheroes = (ListView) root.findViewById(R.id.fragment_superheroes_list);
         Data data = new Data();
-        final List<Superhero> superheroes = data.getSuperheroes();
 
-        ArrayAdapter<Superhero> superheroesAdapter =
-                new ArrayAdapter<Superhero>(root.getContext(), -1, superheroes) {
-                    @NonNull
-                    @Override
-                    public View getView(int position, View convertView, ViewGroup parent) {
-                        View view = convertView;
-                        if (view == null) {
-                            LayoutInflater inflater = LayoutInflater.from(this.getContext());
-                            view = inflater.inflate(R.layout.item_superhero, parent, false);
+        BaseData<Superhero> superheroData = new HttpData<Superhero>("http://192.168.198.239:3001/api/superheroes",Superhero.class,Superhero[].class);
+        //final List<Superhero> superheroes = data.getSuperheroes();
+        List<Superhero> superheroesHttp = new ArrayList<>();
+        superheroData.getAll().subscribe(superheroes -> {
+
+            ArrayAdapter<Superhero> superheroesAdapter =
+                    new ArrayAdapter<Superhero>(root.getContext(), -1, superheroes) {
+                        @NonNull
+                        @Override
+                        public View getView(int position, View convertView, ViewGroup parent) {
+                            View view = convertView;
+                            if (view == null) {
+                                LayoutInflater inflater = LayoutInflater.from(this.getContext());
+                                view = inflater.inflate(R.layout.item_superhero, parent, false);
+                            }
+
+                            TextView tvTitle = (TextView) view.findViewById(R.id.tv_superhero);
+
+                            String title = this.getItem(position).name;
+                            tvTitle.setText(title);
+
+                            return view;
                         }
+                    };
 
-                        TextView tvTitle = (TextView) view.findViewById(R.id.tv_superhero);
 
-                        String title = this.getItem(position).name;
-                        tvTitle.setText(title);
+            lvSuperheroes.setAdapter(superheroesAdapter);
 
-                        return view;
-                    }
-                };
-
-        lvSuperheroes.setAdapter(superheroesAdapter);
 
         lvSuperheroes.setOnItemClickListener((parent, view, position, id) -> {
-            Superhero sh = superheroes.get(position);
+            Superhero sh = superheroes[position];
             //if activity is not ICanNavigateActivity) then do nothing
             ICanNavigateActivity<Superhero> activity = (ICanNavigateActivity<Superhero>) this.getActivity();
 
             activity.navigate(sh);
         });
 
+        });
         return root;
     }
 }
