@@ -25,29 +25,14 @@ import java.util.List;
 
 public class SearchFragment extends Fragment {
 
-    public static final String ARG_PAGE = "ARG_PAGE";
     private BaseData<Superhero> superheroData;
-
-    public SearchFragment() {
-        // Required empty public constructor
-    }
-
-
-    public static SuperheroesFragment createFragment(int page) {
-        Bundle args = new Bundle();
-        args.putInt(ARG_PAGE, page);
-        SuperheroesFragment fragment = new SuperheroesFragment();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_search, container, false);
         ListView lvSuperheroes = (ListView) root.findViewById(R.id.fragment_superheroes_list);
         final List<Superhero> superheroes = new ArrayList<>();
+
         String superheroesUrl = "http://androidteamworkwebapi.azurewebsites.net/api/superheroes/";
         superheroData = new HttpData<>(
                 superheroesUrl,

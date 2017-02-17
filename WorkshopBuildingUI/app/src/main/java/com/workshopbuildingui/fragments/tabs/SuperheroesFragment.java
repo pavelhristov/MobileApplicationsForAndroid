@@ -23,28 +23,15 @@ import java.util.List;
 
 
 public class SuperheroesFragment extends Fragment {
-    /*public static final String ARG_PAGE = "ARG_PAGE";
-
-    public static SuperheroesFragment createFragment(int page) {
-        Bundle args = new Bundle();
-        args.putInt(ARG_PAGE, page);
-        SuperheroesFragment fragment = new SuperheroesFragment();
-        fragment.setArguments(args);
-        return fragment;
-    }*/
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_superheroes, container, false);
         ListView lvSuperheroes = (ListView) root.findViewById(R.id.fragment_superheroes_list);
 
+        String superheroesUrl = "http://androidteamworkwebapi.azurewebsites.net/api/superheroes/";
         BaseData<Superhero> superheroData = new HttpData<>(
-                "http://androidteamworkwebapi.azurewebsites.net/api/superheroes",
+                superheroesUrl,
                 Superhero.class,
                 Superhero[].class);
         superheroData.getAll().subscribe(superheroes -> {
