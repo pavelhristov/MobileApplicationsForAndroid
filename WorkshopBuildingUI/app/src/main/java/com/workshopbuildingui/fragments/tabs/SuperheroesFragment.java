@@ -42,11 +42,11 @@ public class SuperheroesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_superheroes, container, false);
         ListView lvSuperheroes = (ListView) root.findViewById(R.id.fragment_superheroes_list);
-        Data data = new Data();
 
-        BaseData<Superhero> superheroData = new HttpData<Superhero>("http://192.168.198.239:3001/api/superheroes",Superhero.class,Superhero[].class);
-        //final List<Superhero> superheroes = data.getSuperheroes();
-        List<Superhero> superheroesHttp = new ArrayList<>();
+        BaseData<Superhero> superheroData = new HttpData<>(
+                "http://androidteamworkwebapi.azurewebsites.net/api/superheroes",
+                Superhero.class,
+                Superhero[].class);
         superheroData.getAll().subscribe(superheroes -> {
 
             ArrayAdapter<Superhero> superheroesAdapter =
@@ -73,13 +73,13 @@ public class SuperheroesFragment extends Fragment {
             lvSuperheroes.setAdapter(superheroesAdapter);
 
 
-        lvSuperheroes.setOnItemClickListener((parent, view, position, id) -> {
-            Superhero sh = superheroes[position];
-            //if activity is not ICanNavigateActivity) then do nothing
-            ICanNavigateActivity<Superhero> activity = (ICanNavigateActivity<Superhero>) this.getActivity();
+            lvSuperheroes.setOnItemClickListener((parent, view, position, id) -> {
+                Superhero sh = superheroes[position];
+                //if activity is not ICanNavigateActivity) then do nothing
+                ICanNavigateActivity<Superhero> activity = (ICanNavigateActivity<Superhero>) this.getActivity();
 
-            activity.navigate(sh);
-        });
+                activity.navigate(sh);
+            });
 
         });
         return root;

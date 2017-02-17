@@ -20,13 +20,13 @@ import com.workshopbuildingui.data.Data;
 import com.workshopbuildingui.models.Superhero;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class SearchFragment extends Fragment {
 
     public static final String ARG_PAGE = "ARG_PAGE";
     private BaseData<Superhero> superheroData;
-    private Data data;
 
     public SearchFragment() {
         // Required empty public constructor
@@ -48,15 +48,20 @@ public class SearchFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_search, container, false);
         ListView lvSuperheroes = (ListView) root.findViewById(R.id.fragment_superheroes_list);
         final List<Superhero> superheroes = new ArrayList<>();
-        //superheroData = new HttpData<Superhero>("",Superhero.class,Superhero[].class);
-        data = new Data();
+        String superheroesUrl = "http://androidteamworkwebapi.azurewebsites.net/api/superheroes/";
+        superheroData = new HttpData<>(
+                superheroesUrl,
+                Superhero.class,
+                Superhero[].class);
 
         Button btnSearch = (Button)root.findViewById(R.id.btn_search);
         btnSearch.setOnClickListener((btn) -> {
             String pattern = ((TextView)root.findViewById(R.id.et_search_pattern)).getText().toString();
-            List<Superhero> foundSuperheroes = data.search(pattern);
-            ArrayAdapter<Superhero> superheroesAdapter =
-                    new ArrayAdapter<Superhero>(root.getContext(), -1, foundSuperheroes) {
+            superheroData.search(pattern).subscribe(superheroesHttp -> {
+                superheroes.clear();
+                superheroes.addAll(new ArrayList<>(Arrays.asList(superheroesHttp)));
+                ArrayAdapter<Superhero> superheroesAdapter =
+                    new ArrayAdapter<Superhero>(root.getContext(), -1, superheroes) {
                         @NonNull
                         @Override
                         public View getView(int position, View convertView, ViewGroup parent) {
@@ -74,9 +79,8 @@ public class SearchFragment extends Fragment {
                             return view;
                         }
                     };
-            superheroes.clear();
-            superheroes.addAll(foundSuperheroes);
-            lvSuperheroes.setAdapter(superheroesAdapter);
+                lvSuperheroes.setAdapter(superheroesAdapter);
+            });
         });
 
         lvSuperheroes.setOnItemClickListener((parent, view, position, id) -> {

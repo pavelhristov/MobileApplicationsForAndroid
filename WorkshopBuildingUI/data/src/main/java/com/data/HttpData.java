@@ -14,7 +14,6 @@ import okhttp3.Response;
 
 public class HttpData<T> implements BaseData{
 
-
     private final String apiUrl;
     private final OkHttpClient client;
     private final Gson gson;
@@ -51,4 +50,29 @@ public class HttpData<T> implements BaseData{
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
+
+    @Override
+    public Observable search(String pattern) {
+        final String searchPattern = pattern;
+        return Observable
+                .create(new ObservableOnSubscribe<T[]>() {
+                    @Override
+                    public void subscribe(ObservableEmitter<T[]> e) throws Exception {
+                        Request req = new Request.Builder()
+                                .url(apiUrl + "/search/" + searchPattern)
+                                .build();
+
+                        Response res = client.newCall(req).execute();
+
+                        String json = res.body().string();
+
+                        T[] result = gson.fromJson(json, klassArray);
+
+                        e.onNext(result);
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
 }
