@@ -1,4 +1,4 @@
-package com.workshopbuildingui.models;
+package com.data.models;
 
 import java.io.Serializable;
 

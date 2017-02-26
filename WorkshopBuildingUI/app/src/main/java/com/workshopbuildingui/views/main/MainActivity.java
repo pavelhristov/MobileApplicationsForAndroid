@@ -1,4 +1,4 @@
-package com.workshopbuildingui.activities;
+package com.workshopbuildingui.views.main;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,20 +9,43 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 
 import com.astuetz.PagerSlidingTabStrip;
+import com.data.HttpData;
+import com.data.base.BaseData;
 import com.workshopbuildingui.ICanNavigateActivity;
 import com.workshopbuildingui.PageFragment;
 import com.workshopbuildingui.R;
-import com.workshopbuildingui.fragments.tabs.SearchFragment;
-import com.workshopbuildingui.fragments.tabs.SuperheroesFragment;
-import com.workshopbuildingui.models.Superhero;
+import com.workshopbuildingui.views.details.SuperheroDetailsActivity;
+import com.workshopbuildingui.views.main.tabs.search.SearchContracts;
+import com.workshopbuildingui.views.main.tabs.search.SearchFragment;
+import com.workshopbuildingui.views.main.tabs.search.SearchPresenter;
+import com.workshopbuildingui.views.main.tabs.superheroes.SuperheroesContracts;
+import com.workshopbuildingui.views.main.tabs.superheroes.SuperheroesFragment;
+import com.data.models.Superhero;
+import com.workshopbuildingui.views.main.tabs.superheroes.SuperheroesPresenter;
 
 public class MainActivity extends AppCompatActivity implements ICanNavigateActivity<Superhero> {
 
+
+    private SearchContracts.Presenter searchPresenter;
+    private SearchContracts.View searchView;
+    private SuperheroesContracts.View superheroesView;
+    private SuperheroesContracts.Presenter superheroesPresenter;
+    private BaseData<Superhero> httpData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        String apiUrl = "http://androidteamworkwebapi.azurewebsites.net/api/superheroes/";
+        this.httpData = new HttpData<>(apiUrl, Superhero.class, Superhero[].class);
+
+        this.searchView = new SearchFragment();
+        this.searchPresenter = new SearchPresenter(this.searchView, this.httpData);
+
+        this.superheroesView = new SuperheroesFragment();
+        this.superheroesPresenter = new SuperheroesPresenter(this.superheroesView, this.httpData);
+
 
         // Get the ViewPager and set it's PagerAdapter so that it can display items
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
@@ -59,9 +82,9 @@ public class MainActivity extends AppCompatActivity implements ICanNavigateActiv
         public Fragment getItem(int position) {
             switch (position){
                 case 0:
-                    return new SuperheroesFragment();
+                    return (Fragment)superheroesPresenter.getView();
                 case 2:
-                    return new SearchFragment();
+                    return (Fragment)searchPresenter.getView();
                 default:
                     return PageFragment.createFragment(position + 1);
             }
